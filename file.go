@@ -412,3 +412,15 @@ func (f *File) SaveToIndent(filename, indent string) error {
 func (f *File) SaveTo(filename string) error {
 	return f.SaveToIndent(filename, "")
 }
+
+// SaveToSeparator writes content to file system with given value indention and replaces default separator "=" with given separator
+func (f *File) SaveToSeparator(filename, intent string, separator string) error {
+    // Note: Because we are truncating with os.Create,
+    //     so it's safer to save to a temporary file location and rename afte done.
+    buf, err := f.writeToBuffer(separator)
+    if err != nil {
+        return err
+    }
+
+    return ioutil.WriteFile(filename, []byte(strings.Replace(buf.String(), "=", split, -1)), 0666)
+}
